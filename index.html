@@ -3381,17 +3381,22 @@ body[data-not-sent] > #vis-container ~ #not-sent {
   </svg><div id="vis-container"><style>
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 #w{--ac:#D4537E;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;padding:.5rem 0}
-#card{flex:0 0 300px;max-width:100%;box-sizing:border-box;text-align:center;padding:1.25rem 1rem 1.1rem;border-radius:20px;background:color-mix(in srgb,var(--ac) 8%,var(--surface-2));border:0.5px solid color-mix(in srgb,var(--ac) 35%,transparent)}
+#w.solo{justify-content:center}
+#card{position:relative;flex:0 0 300px;max-width:100%;box-sizing:border-box;text-align:center;padding:1.25rem 1rem 1.1rem;border-radius:20px;background:color-mix(in srgb,var(--ac) 8%,var(--surface-2));border:0.5px solid color-mix(in srgb,var(--ac) 35%,transparent)}
+#tg{position:absolute;top:8px;right:8px;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border-color:transparent;background:transparent;color:var(--text-muted);cursor:pointer}
+#tg:hover{background:color-mix(in srgb,var(--ac) 12%,transparent);color:var(--ac)}
 #set{flex:1 1 230px;display:grid;gap:10px;font-size:12px;color:var(--text-secondary)}
+#set[hidden]{display:none}
 #set label{display:block;margin-bottom:3px}
 .row{display:flex;gap:8px}
 .row>div{flex:1;min-width:0}
 .dot{width:22px;height:22px;border-radius:50%;padding:0;border:2px solid transparent;cursor:pointer}
 .seg{flex:1;font-size:12px;padding:4px 6px;height:30px}
 </style>
-<h2 class="sr-only">Contador de dias juntos como casal, com data de início e aparência personalizáveis</h2>
+<h2 class="sr-only">Contador de dias juntos como casal, com data de início e aparência personalizáveis e painel de ajustes que pode ser escondido</h2>
 <div id="w">
   <div id="card">
+    <button id="tg" aria-label="Esconder ajustes" title="Mostrar ou esconder ajustes"><i class="ti ti-settings" id="tgi" style="font-size:17px" aria-hidden="true"></i></button>
     <div id="names" style="font-family:var(--font-voice);font-size:16px;color:var(--text-primary);min-height:24px;margin-bottom:6px"></div>
     <div style="position:relative;width:170px;height:170px;margin:0 auto">
       <svg viewBox="0 0 170 170" width="170" height="170" aria-hidden="true">
@@ -3412,7 +3417,7 @@ body[data-not-sent] > #vis-container ~ #not-sent {
     <div>
       <label for="d">Início do relacionamento</label>
       <input type="date" id="d" value="2024-02-14" style="width:100%">
-      <div id="err" style="font-size:12px;color:var(--text-danger);margin-top:4px;min-height:0"></div>
+      <div id="err" style="font-size:12px;color:var(--text-danger);margin-top:4px"></div>
     </div>
     <div class="row">
       <div><label for="n1">Nome</label><input id="n1" type="text" placeholder="Wane" style="width:100%"></div>
@@ -3441,7 +3446,7 @@ var $=function(i){return document.getElementById(i)};
 var themes=[['#D4537E','Rosa'],['#7F77DD','Lilás'],['#1D9E75','Verde-água'],['#D85A30','Coral'],['#378ADD','Azul']];
 var mode='ym';
 var w=$('w');
-themes.forEach(function(t,i){
+themes.forEach(function(t){
   var b=document.createElement('button');
   b.className='dot';b.style.background=t[0];b.setAttribute('aria-label',t[1]);
   b.onclick=function(){w.style.setProperty('--ac',t[0]);mark();};
@@ -3456,6 +3461,14 @@ function mark(){
     b.style.color=on?'var(--ac)':'';
   });
 }
+$('tg').onclick=function(){
+  var s=$('set'),hide=!s.hidden;
+  s.hidden=hide;
+  w.classList.toggle('solo',hide);
+  $('tgi').className=hide?'ti ti-settings':'ti ti-eye-off';
+  $('tg').setAttribute('aria-label',hide?'Mostrar ajustes':'Esconder ajustes');
+};
+$('tgi').className='ti ti-eye-off';
 function pl(n,s,p){return n+' '+(n===1?s:p)}
 function dim(y,m){return new Date(y,m,0).getDate()}
 function render(){
